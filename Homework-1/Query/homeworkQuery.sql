@@ -30,7 +30,7 @@ CREATE TABLE [dbo].[Teacher]
 
 CREATE TABLE [dbo].[Grade]
 (
-	[ID] [int] NOT NULL,
+	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[StudentID] [int] NOT NULL,
 	[CourseID] [smallint] NOT NULL,
 	[TeacherID] [smallint] NOT NULL,
