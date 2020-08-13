@@ -145,6 +145,25 @@ GO
 
 --HOMEWORK 2 REQUIREMENT 5/6
 --1
+alter table dbo.Grade with check add constraint [FK_Grade_Course] foreign key([CourseID])
+references dbo.Course ([ID])
+go
+
+alter table dbo.Grade with check add constraint [FK_Grade_Student] foreign key([StudentID])
+references dbo.Student ([ID])
+go
+
+alter table dbo.Grade with check add constraint [FK_Grade_Teacher] foreign key([TeacherID])
+references dbo.Teacher ([ID])
+go
+
+alter table dbo.GradeDetails with check add constraint [FK_GradeDetails_AchievementType] foreign key([AchievementTypeID])
+references dbo.AchievementType ([ID])
+go
+
+alter table dbo.GradeDetails with check add constraint [FK_GradeDetails_Grade] foreign key([GradeID])
+references dbo.Grade ([ID])
+go
 
 --HOMEWORK 2 REQUIREMENT 6/6
 --1
@@ -156,29 +175,39 @@ from
 GO
 
 --2
-select 
+select distinct
 	t.FirstName as TeacherNames
 from
-	dbo.Grade g
-	inner join dbo.Teacher t on t.ID = g.TeacherID
+	dbo.Teacher t
+	inner join dbo.Grade g on t.ID = g.TeacherID
 GO
 
 --3
 select 
 	t.FirstName as Teachers
 from
-	dbo.Grade g
-	inner join dbo.Teacher t on t.ID = g.TeacherID
+	dbo.Teacher t
+	left join dbo.Grade g on t.ID = g.TeacherID
 where
-	g.TeacherID is null
+	g.ID is null
 GO
 
 --4
 select
-	s.FirstName as Students
+	s.*
+from
+	dbo.Grade g
+	right join dbo.Student s on g.StudentID = s.ID
+where
+	g.StudentID is null
+GO
+
+--left
+select
+	s.*
 from
 	dbo.Student s
-	right join dbo.Grade g on g.StudentID = s.ID
+	left join dbo.Grade g on s.ID = g.StudentID
 where
 	g.StudentID is null
 GO
