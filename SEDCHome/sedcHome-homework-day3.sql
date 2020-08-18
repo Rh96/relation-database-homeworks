@@ -9,145 +9,136 @@ group by
 GO
 
 --2
-select distinct
-	t.FirstName + N' ' + t.LastName as Teachers, count(g.Grade) as TotalGradesPerTeacher
+select 
+	g.TeacherID, count(g.Grade) as TotalGradesPerTeacher
 from
-	dbo.Grade g
-	inner join dbo.Teacher as t on t.ID = g.TeacherID
-group by 
-	t.FirstName, t.LastName, g.Grade 
+	dbo.Grade as g
+group by
+	g.TeacherID
+order by
+	g.TeacherID
 Go
 
 --3
-select distinct
-	t.FirstName + N' ' + t.LastName as Teachers, s.ID as StudentID , count(*) as TotalGradesPerTeacher
+select
+	 g.TeacherID, count(*) as TotalGradesPerTeacher
 from
 	dbo.Grade g
-	inner join dbo.Teacher as t on t.ID = g.TeacherID
-	inner join dbo.Student as s on s.ID = g.StudentID
 where
-	s.ID < 100
+	g.StudentID < 100
 group by 
-	t.FirstName, t.LastName, g.Grade, s.ID 
+	g.TeacherID
+order by
+	g.TeacherID
 Go
 
 --4
 select
-	s.StudentCardNumber as StudentCard, max(g.Grade) as MaxGrade, avg(g.Grade) as AvgGrade
+	g.StudentID, max(g.Grade) as MaxGrade, avg(cast(g.Grade as decimal(18,2))) as AvgGrade
 from
 	dbo.Grade g
-	inner join dbo.Student as s on s.ID = g.StudentID
 group by
-	s.StudentCardNumber
+	g.StudentID
+order by
+	g.StudentID
 GO
-
 
 --Homework requirement 2/3
 --1
 select 
-	t.FirstName + N' ' + t.LastName as Teachers, count(g.Grade) as GradeCount
+	g.TeacherID, count(g.Grade) as GradeCount
 from
-	dbo.Grade g
-	inner join dbo.Teacher as t on t.ID = g.TeacherID
-where
-	g.Grade > 200
+	dbo.Grade as g
 group by 
-	t.FirstName, t.LastName, g.Grade
+	g.TeacherID
+having 
+	count(g.Grade) > 200
 Go
 
 --2
 select
-	t.FirstName + N' ' + t.LastName as Teachers, s.ID as StudentID , count(*) as TotalGradesPerTeacher
+	g.TeacherID, count(g.Grade) as GradeCount
 from
 	dbo.Grade g
-	inner join dbo.Teacher as t on t.ID = g.TeacherID
-	inner join dbo.Student as s on s.ID = g.StudentID
 where
-	s.ID < 100
+	g.StudentID < 100
 group by 
-	t.FirstName, t.LastName, g.Grade, s.ID 
+	g.TeacherID
 having
 	count(Grade) > 50
 Go
 
 --3
 select
-	s.StudentCardNumber as StudentCard, count(g.Grade) as GradeCount, max(g.Grade) as MaxGrade, avg(g.Grade) as AvgGrade
+	g.StudentID, count(g.Grade) as GradeCount, max(g.Grade) as MaxGrade, avg(cast(g.Grade as decimal(4,2))) as AverageGrade
 from
 	dbo.Grade g
 	inner join dbo.Student as s on s.ID = g.StudentID
 group by
-	s.StudentCardNumber
+	g.StudentID
 having
-	max(g.Grade) = avg(g.Grade)
+	max(g.Grade) =  avg(cast(g.Grade as decimal(4,2)))
 GO
 
 --4
 select
-	s.FirstName + N' ' + s.LastName as Student, s.StudentCardNumber as CardNumber ,count(g.Grade) as GradeCount, max(g.Grade) as MaxGrade, avg(g.Grade) as AvgGrade
+	g.StudentID, s.FirstName, s.LastName, count(g.Grade) as GradeCount, max(g.Grade) as MaxGrade, avg(cast(g.Grade as decimal(4,2))) as AverageGrade
 from
 	dbo.Grade g
 	inner join dbo.Student as s on s.ID = g.StudentID
 group by
-	s.FirstName, s.LastName ,s.StudentCardNumber
+	g.StudentID, s.FirstName, s.LastName
 having
-	max(g.Grade) = avg(g.Grade)
+	max(g.Grade) =  avg(cast(g.Grade as decimal(4,2)))
 GO
 
 --Homework requirement 3/3
 --1
+drop view if exists vv_StudentGrades
+go
+
 create view vv_StudentGrades
 as
 select
-	s.ID as StudentID, count(g.Grade) as GradeCount
+	g.StudentID, count(g.Grade) as GradeCount
 from
 	dbo.Grade g
-	inner join dbo.Student as s on s.ID = g.StudentID
 group by
-	s.ID
+	g.StudentID
 GO
 
 --2
 alter view vv_StudentGrades
 as
 select
-	s.FirstName + N' ' + s.LastName as StudentName, count(g.Grade) as GradeCount
+	g.StudentID, s.FirstName, s.LastName, count(g.Grade) as GradeCount
 from
 	dbo.Grade g
-	inner join dbo.Student as s on s.ID = g.StudentID
+	inner join dbo.Student as s on g.StudentID = s.ID
 group by
-	s.FirstName, s.LastName, g.Grade
+	g.StudentID, s.FirstName, s.LastName
 GO
 
 --3
-alter view vv_StudentGrades
-as
-select
-	s.FirstName + N' ' + s.LastName as StudentName, count(g.Grade) as GradeCount
-from
-	dbo.Grade g
-	inner join dbo.Student as s on s.ID = g.StudentID
-group by
-	s.FirstName, s.LastName, g.Grade
-order by
-	GradeCount desc
-GO
+select * from dbo.vv_StudentGrades
+order by GradeCount desc
+go
 
 --4
+drop view if exists vv_StudentGradeDetails
+go
+
 create view vv_StudentGradeDetails
 as
-select distinct
-	s.FirstName + N' ' + s.LastName as StudentName, count(*) as Passed
+select
+	s.FirstName + N' ' + s.LastName as StudentName, count(*) as CourseCount
 from
-	dbo.GradeDetails gd
-	inner join dbo.Grade as g on g.ID = gd.GradeID
-	inner join dbo.Student as s on s.ID = g.StudentID
-	inner join dbo.Course as c on c.ID = g.CourseID
-	inner join dbo.AchievementType as atype on atype.ID = gd.AchievementTypeID
+	dbo.Grade as g
+	inner join dbo.Student as s on g.StudentID = s.ID
+	inner join dbo.GradeDetails as gd on g.ID = gd.GradeID
+	inner join dbo.AchievementType as acht on gd.AchievementTypeID = acht.ID
 where
-	gd.AchievementTypeID = 5
+	acht.[Name] = 'Ispit'
 group by
-	s.FirstName, s.LastName, g.CourseID
-having
-	max(AchievementPoints) > 50
+	s.FirstName, s.LastName
 GO
