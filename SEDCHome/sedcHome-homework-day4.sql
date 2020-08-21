@@ -68,5 +68,5 @@ as
 	end
 go
 
-select *, dbo.fn_FormatStudentName(0) as FunctionOutput
+select *, dbo.fn_FormatStudentName(ID) as FunctionOutput
 from Student
