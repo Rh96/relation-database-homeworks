@@ -1,127 +1,77 @@
 --HOMEWORK 2 REQUIREMENT 1/6
 --1
-select
-	*
-from
-	dbo.Student
-where
-	FirstName = 'Antonio'
+select * from dbo.Student
+where FirstName = 'Antonio'
 GO
 
 --2
-select 
-	*
-from
-	dbo.Student
-where
-	DateOfBirth > '1999.01.01'
+select * from dbo.Student
+where DateOfBirth > '1999.01.01'
 GO
 
 --3
-select
-	*
-from
-	dbo.Student
-where
-	Gender = 'M'
+select * from	dbo.Student
+where Gender = 'M'
 GO
 
 --4
-select
-	*
-from
-	dbo.Student
-where
-	LastName like 'T%'
+select * from	dbo.Student
+where LastName like 'T%'
 GO
 
 --5
-select
-	*
-from
-	dbo.Student
-where
-	EnrolledDate >= '1998.01.01' and EnrolledDate < '1998.02.01'
+select * from dbo.Student
+where EnrolledDate >= '1998.01.01' and EnrolledDate < '1998.02.01'
 GO
 
 --6
-select
-	*
-from
-	dbo.Student
-where
-	EnrolledDate >= '1998.01.01' and EnrolledDate < '1998.02.01'
-	and LastName like 'J%'
+select * from dbo.Student
+where EnrolledDate >= '1998.01.01' and EnrolledDate < '1998.02.01' and LastName like 'J%'
 GO
 
 --HOMEWORK 2 REQUIREMENT 2/6
 --1
-select
-	*
-from
-	dbo.Student
-where 
-	FirstName = 'Antonio'
-order by
-	LastName
+select * from dbo.Student
+where FirstName = 'Antonio'
+order by LastName
 GO
 
 --2
-select
-	*
-from
-	dbo.Student
-order by
-	FirstName
+select * from dbo.Student
+order by FirstName
 GO
 
 --3
-select
-	*
-from
-	dbo.Student
-where
-	Gender = 'M'
-order by
-	EnrolledDate desc
+select *
+from dbo.Student
+where Gender = 'M'
+order by EnrolledDate desc
 GO
 
 
 --HOMEWORK 2 REQUIREMENT 3/6
 --1
-select
-	FirstName
-from
-	dbo.Teacher
+select FirstName
+from dbo.Teacher
 union all
-select
-	FirstName
-from
-	dbo.Student
+select FirstName
+from dbo.Student
 GO
 
 --2
-select
-	LastName
-from
-	dbo.Teacher
+select LastName
+from dbo.Teacher
 union 
-select
-	LastName
-from
-	dbo.Student
+select LastName
+from dbo.Student
 GO
 
 --3
-select
-	FirstName
-from
-	dbo.Teacher
+select FirstName
+from dbo.Teacher
 intersect
-select
-	FirstName
-from
-	dbo.Student
+select FirstName
+from dbo.Student
 GO
 
 
@@ -167,47 +117,39 @@ go
 
 --HOMEWORK 2 REQUIREMENT 6/6
 --1
-select
-	c.[Name] as CoursesNames, acht.[Name] as AchievementTypeNames
-from
-	dbo.Course c
-	cross join dbo.AchievementType acht
+select c.[Name] as CoursesNames, a.[Name] as AchievementTypeNames
+from 
+	dbo.Course as c 
+	cross join dbo.AchievementType as a
 GO
 
 --2
-select distinct
-	t.FirstName as TeacherNames
+select distinct t.FirstName as TeacherNames
 from
-	dbo.Teacher t
+	dbo.Teacher as t
 	inner join dbo.Grade g on t.ID = g.TeacherID
 GO
 
 --3
-select 
-	t.FirstName as Teachers
+select t.FirstName as Teachers
 from
-	dbo.Teacher t
+	dbo.Teacher as t
 	left join dbo.Grade g on t.ID = g.TeacherID
-where
-	g.ID is null
+where g.ID is null
 GO
 
 --4
-select
-	s.*
+select s.*
 from
-	dbo.Grade g
-	right join dbo.Student s on g.StudentID = s.ID
-where
-	g.StudentID is null
+	dbo.Grade as g
+	right join dbo.Student as s on g.StudentID = s.ID
+where g.StudentID is null
 GO
 
 --left
-select
-	s.*
+select s.*
 from
-	dbo.Student s
-	left join dbo.Grade g on s.ID = g.StudentID
-where
-	g.StudentID is null
+	dbo.Student as s
+	left join dbo.Grade as g on s.ID = g.StudentID
+where g.StudentID is null
 GO

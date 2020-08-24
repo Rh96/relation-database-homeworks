@@ -1,90 +1,62 @@
 --Homework requirement 1/3
 --1
-select
-	count(g.Grade) as TotalGrades
-from
-	dbo.Grade g
-group by
-	g.Grade
+select count(g.Grade) as TotalGrades
+from dbo.Grade as g
+group by g.Grade
 GO
 
 --2
-select 
-	g.TeacherID, count(g.Grade) as TotalGradesPerTeacher
-from
-	dbo.Grade as g
-group by
-	g.TeacherID
-order by
-	g.TeacherID
+select g.TeacherID, count(g.Grade) as TotalGradesPerTeacher
+from dbo.Grade as g
+group by g.TeacherID
+order by g.TeacherID
 Go
 
 --3
-select
-	 g.TeacherID, count(*) as TotalGradesPerTeacher
-from
-	dbo.Grade g
-where
-	g.StudentID < 100
-group by 
-	g.TeacherID
-order by
-	g.TeacherID
+select g.TeacherID, count(*) as TotalGradesPerTeacher
+from dbo.Grade as g
+where g.StudentID < 100
+group by g.TeacherID
+order by g.TeacherID
 Go
 
 --4
-select
-	g.StudentID, max(g.Grade) as MaxGrade, avg(cast(g.Grade as decimal(18,2))) as AvgGrade
-from
-	dbo.Grade g
-group by
-	g.StudentID
-order by
-	g.StudentID
+select g.StudentID, max(g.Grade) as MaxGrade, avg(cast(g.Grade as decimal(18,2))) as AvgGrade
+from dbo.Grade as g
+group by g.StudentID
+order by g.StudentID
 GO
 
 --Homework requirement 2/3
 --1
-select 
-	g.TeacherID, count(g.Grade) as GradeCount
-from
-	dbo.Grade as g
-group by 
-	g.TeacherID
-having 
-	count(g.Grade) > 200
+select g.TeacherID, count(g.Grade) as GradeCount
+from dbo.Grade as g
+group by g.TeacherID
+having count(g.Grade) > 200
 Go
 
 --2
-select
-	g.TeacherID, count(g.Grade) as GradeCount
-from
-	dbo.Grade g
-where
-	g.StudentID < 100
-group by 
-	g.TeacherID
-having
-	count(Grade) > 50
+select g.TeacherID, count(g.Grade) as GradeCount
+from dbo.Grade as g
+where g.StudentID < 100
+group by g.TeacherID
+having count(Grade) > 50
 Go
 
 --3
-select
-	g.StudentID, count(g.Grade) as GradeCount, max(g.Grade) as MaxGrade, avg(cast(g.Grade as decimal(4,2))) as AverageGrade
+select g.StudentID, count(g.Grade) as GradeCount, max(g.Grade) as MaxGrade, avg(cast(g.Grade as decimal(4,2))) as AverageGrade
 from
 	dbo.Grade g
 	inner join dbo.Student as s on s.ID = g.StudentID
-group by
-	g.StudentID
-having
-	max(g.Grade) =  avg(cast(g.Grade as decimal(4,2)))
+group by g.StudentID
+having max(g.Grade) =  avg(cast(g.Grade as decimal(4,2)))
 GO
 
 --4
 select
 	g.StudentID, s.FirstName, s.LastName, count(g.Grade) as GradeCount, max(g.Grade) as MaxGrade, avg(cast(g.Grade as decimal(4,2))) as AverageGrade
 from
-	dbo.Grade g
+	dbo.Grade as g
 	inner join dbo.Student as s on s.ID = g.StudentID
 group by
 	g.StudentID, s.FirstName, s.LastName
@@ -99,12 +71,9 @@ go
 
 create view vv_StudentGrades
 as
-select
-	g.StudentID, count(g.Grade) as GradeCount
-from
-	dbo.Grade g
-group by
-	g.StudentID
+select g.StudentID, count(g.Grade) as GradeCount
+from dbo.Grade g
+group by g.StudentID
 GO
 
 --2
